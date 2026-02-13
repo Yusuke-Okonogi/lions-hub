@@ -1,65 +1,94 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import { useState } from 'react';
+import { supabase } from '@/lib/supabase';
+import { useRouter } from 'next/navigation';
+/* --- 🛠️ アイコン追加：鍵とメール --- */
+import { Mail, Lock, LogIn, ShieldCheck } from 'lucide-react';
+
+export default function LoginPage() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState(''); // パスワード用のステートを追加
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    /* --- 🛠️ 修正：パスワードでサインインする --- */
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      alert('ログインに失敗しました: ' + error.message);
+      setLoading(false);
+    } else {
+      // ログイン成功！ダッシュボードへ
+      router.push('/dashboard');
+    }
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="min-h-screen bg-[#003366] flex flex-col items-center justify-center p-6">
+      {/* ロゴエリア */}
+      <div className="mb-12 text-center">
+        <div className="bg-white p-4 rounded-[30px] shadow-2xl mb-4 inline-block animate-bounce-slow">
+          <ShieldCheck size={64} className="text-[#003366]" strokeWidth={2.5} />
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        <h1 className="text-4xl font-black text-white tracking-tighter italic">LIONS HUB</h1>
+        <p className="text-blue-200/60 font-bold text-xs mt-2 uppercase tracking-widest">Digital Management System</p>
+      </div>
+
+      {/* ログインフォーム */}
+      <form onSubmit={handleLogin} className="w-full max-w-sm space-y-4">
+        <div className="relative">
+          <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
+          <input
+            type="email"
+            placeholder="メールアドレス"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            className="w-full p-5 pl-12 bg-white/10 border-2 border-white/10 rounded-[25px] text-white font-bold placeholder:text-white/30 outline-none focus:border-white/50 transition-all"
+          />
         </div>
-      </main>
+
+        <div className="relative">
+          <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
+          <input
+            type="password"
+            placeholder="パスワード"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            className="w-full p-5 pl-12 bg-white/10 border-2 border-white/10 rounded-[25px] text-white font-bold placeholder:text-white/30 outline-none focus:border-white/50 transition-all"
+          />
+        </div>
+
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full py-5 bg-white text-[#003366] rounded-[25px] font-black text-xl shadow-xl hover:bg-blue-50 active:scale-95 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
+        >
+          {loading ? (
+            <div className="w-6 h-6 border-4 border-[#003366]/30 border-t-[#003366] rounded-full animate-spin" />
+          ) : (
+            <>
+              <LogIn size={24} strokeWidth={3} />
+              ログイン
+            </>
+          )}
+        </button>
+      </form>
+
+      {/* 案内メッセージ */}
+      <p className="mt-8 text-white/40 text-[10px] font-bold text-center leading-relaxed">
+        ※パスワードを忘れた方は事務局までお問い合わせください。<br />
+        一度ログインすると一定期間保持されます。
+      </p>
     </div>
   );
 }

@@ -1,0 +1,18 @@
+{
+  "name": "LIONS HUB",
+  "short_name": "LionsHub",
+  "description": "ライオンズクラブ専用 出欠・議事録管理アプリ",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#003366",
+  "theme_color": "#003366",
+  "orientation": "portrait",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23003366'/><text x='50' y='65' font-family='sans-serif' font-size='60' fill='white' text-anchor='middle'>L</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    }
+  ]
+}
