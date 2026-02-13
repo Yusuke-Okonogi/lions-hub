@@ -1,10 +1,10 @@
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import Link from 'next/link';
-import { User, ShieldCheck, Bell } from 'lucide-react'; 
 import DashboardContent from '@/components/DashboardContent';
 import Header from '@/components/Header';
+// 🛠️ 修正1: インポートを追加
+import NotificationPrompt from '@/components/NotificationPrompt'; 
 
 export default async function DashboardPage() {
   const cookieStore = await cookies();
@@ -31,23 +31,22 @@ export default async function DashboardPage() {
     .from('profiles')
     .select('*', { count: 'exact', head: true });
 
-  // 2. イベント情報を取得 (既存)
+  // 2. イベント情報を取得
   const { data: events } = await supabase
     .from('events')
     .select('*, attendance(status, user_id)')
     .gte('start_time', new Date(new Date().setMonth(new Date().getMonth() - 1)).toISOString())
     .order('start_time', { ascending: true });
 
-  const { data: latestNotice } = await supabase
+  // 3. お知らせを取得（全員宛 or 自分宛）かつ（期限内）
+  const { data: notices } = await supabase
     .from('notices')
     .select('*')
+    .or(`target_user_id.is.null,target_user_id.eq.${user.id}`)
     .or(`expires_at.is.null,expires_at.gt.${new Date().toISOString()}`)
-    .order('created_at', { ascending: false })
-    .limit(1)
-    .maybeSingle();
+    .order('created_at', { ascending: false });
 
   return (
-    /* 背景色を管理画面と同じ bg-slate-200 に統一 */
     <div className="min-h-screen bg-slate-200 pb-32">
       <Header 
         variant="user"
@@ -55,16 +54,18 @@ export default async function DashboardPage() {
         subtitle="マイページ"
         isAdminBadge={isAdmin}
         rightButtonType="admin"
-        />
-        <main className="px-6 max-w-4xl mx-auto">
-
-        {/* メインコンテンツ（管理者メニューの箱が消えてスッキリ！） */}
-        <DashboardContent 
-        allEvents={events || []} 
-        userId={user.id} 
-        latestNotice={latestNotice} 
-        totalMemberCount={totalMemberCount || 0}
       />
+      <main className="px-6 max-w-4xl mx-auto">
+        {/* 🛠️ 修正2: DashboardContent が期待する 'latestNotice' として配列の先頭を渡す */}
+        <DashboardContent 
+          allEvents={events || []} 
+          userId={user.id} 
+          latestNotice={notices?.[0] || null} 
+          totalMemberCount={totalMemberCount || 0}
+        />
+        
+        {/* 通知許可プロンプトを表示 */}
+        <NotificationPrompt userId={user.id} />
       </main>
     </div>
   );

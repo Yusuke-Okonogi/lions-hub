@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import PasswordSettingsModal from '@/components/PasswordSettingsModal';
-import { ShieldCheck, LayoutDashboard, ArrowLeft, LucideIcon, Lock } from 'lucide-react';
+import { ShieldCheck, LayoutDashboard, ArrowLeft, LucideIcon, Lock, User } from 'lucide-react';
 
 interface HeaderProps {
   topLabel?: string;
@@ -70,15 +70,25 @@ export default function Header({
 
         {/* --- 🛠️ 右側：アクションボタンエリア（縦並び） --- */}
         <div className="w-full md:w-auto shrink-0 flex flex-col gap-3">
-          
-          {/* 1. 最優先：パスワード設定ボタン（大きく目立たせる） */}
+          {/* 🚀 1. 会員情報・通知設定ボタン（新規追加） */}
+          {variant === 'user' && (
+            <Link 
+              href="/profile"
+              className="w-full md:min-w-[180px] flex items-center justify-center gap-3 px-6 py-4 bg-white text-[#003366] rounded-[25px] font-black shadow-lg hover:bg-blue-50 active:scale-95 transition-all border-b-4 border-slate-300"
+            >
+              <User size={20} strokeWidth={3} />
+              <span className="text-sm">名前・通知設定</span>
+            </Link>
+          )}
+
+          {/* 2. パスワード設定ボタン（少しスリムにして併記） */}
           {variant === 'user' && (
             <button 
               onClick={() => setIsModalOpen(true)}
-              className="w-full md:min-w-[180px] flex items-center justify-center gap-3 px-6 py-4 bg-yellow-500 text-slate-900 rounded-[25px] font-black shadow-lg hover:bg-yellow-400 active:scale-95 transition-all border-b-4 border-yellow-700"
+              className="w-full md:min-w-[180px] flex items-center justify-center gap-2 px-6 py-3 bg-yellow-500 text-slate-900 rounded-[20px] font-black shadow-md hover:bg-yellow-400 active:scale-95 transition-all border-b-4 border-yellow-700"
             >
-              <Lock size={20} strokeWidth={3} />
-              <span className="text-sm">パスワード設定</span>
+              <Lock size={18} strokeWidth={3} />
+              <span className="text-xs">パスワード変更</span>
             </button>
           )}
 
