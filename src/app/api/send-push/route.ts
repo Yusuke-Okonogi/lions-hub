@@ -95,12 +95,19 @@ export async function POST(request: Request) {
 
     // 🚀 失敗したトークンがある場合はログに出力（デバッグ用）
     if (response.failureCount > 0) {
-      response.responses.forEach((res, idx) => {
-        if (!res.success) {
-          console.error(`Token ${idx} error:`, res.error);
-        }
-      });
+  response.responses.forEach(async (res, idx) => {
+    if (!res.success && res.error?.code === 'messaging/registration-token-not-registered') {
+      const invalidToken = tokens[idx];
+      console.log('無効なトークンを削除します:', invalidToken);
+      
+      // 🚀 DBから無効なトークンを削除する処理を追加（任意）
+      await supabaseAdmin
+        .from('profiles')
+        .update({ fcm_token: null })
+        .eq('fcm_token', invalidToken);
     }
+  });
+}
 
     return NextResponse.json({ 
       success: true, 
