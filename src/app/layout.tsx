@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next"; // Viewport 型を追加
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -12,26 +12,29 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "LIONS HUB",
-  icons: {
-    icon: '/favicon.png',
-  },
-  description: "ライオンズクラブ専用 管理アプリ",
-  manifest: "/manifest.json", // これが大事！
+// 🚀 ビューポートとテーマカラーは独立して定義するのが最新の推奨です
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false, // アプリのようにズームを固定
   themeColor: "#003366",
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "default",
-    title: "LIONS HUB",
-  },
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 1, // ズームを防いでアプリ感を出す
-  },
 };
 
+export const metadata: Metadata = {
+  title: "LIONS HUB",
+  description: "ライオンズクラブ専用 管理アプリ",
+  manifest: "/manifest.json",
+  icons: {
+    icon: '/favicon.png',
+    apple: '/apple-touch-icon.png', // 🚀 iPhoneのホーム画面用アイコンを明示
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent", // 🚀 よりアプリらしい外観に
+    title: "LIONS HUB",
+  },
+};
 
 export default function RootLayout({
   children,
@@ -39,11 +42,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    // 🚀 suppressHydrationWarning を追加
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+    <html lang="ja" suppressHydrationWarning>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         {children}
       </body>
     </html>
