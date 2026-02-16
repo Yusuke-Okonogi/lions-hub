@@ -60,7 +60,7 @@ export default async function DashboardPage() {
         <DashboardContent 
           allEvents={events || []} 
           userId={user.id} 
-          latestNotice={notices?.[0] || null} 
+          allNotices={notices || []}
           totalMemberCount={totalMemberCount || 0}
         />
         
