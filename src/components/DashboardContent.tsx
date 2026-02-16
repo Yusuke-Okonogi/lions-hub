@@ -136,25 +136,52 @@ export default function DashboardContent({ allEvents, userId, allNotices = [], t
 
       {/* 4. カレンダーヘッダー */}
       <div className="pt-2">
-        <div className="flex justify-between items-center mb-6 bg-white p-4 rounded-3xl shadow-sm border border-slate-100">
-          <button onClick={() => setBaseDate(view === 'day' ? subDays(baseDate, 1) : view === 'week' ? subWeeks(baseDate, 1) : subMonths(baseDate, 1))} className="p-2 text-blue-900 active:scale-90"><ChevronLeft size={32} strokeWidth={4} /></button>
+        <div className="flex flex-col gap-4 bg-white p-5 rounded-[30px] shadow-sm border border-slate-100 mb-6">
+        <div className="flex justify-between items-center w-full">
+          {/* 左移動ボタン */}
+          <button 
+            onClick={() => setBaseDate(view === 'day' ? subDays(baseDate, 1) : view === 'week' ? subWeeks(baseDate, 1) : subMonths(baseDate, 1))} 
+            className="p-3 bg-slate-50 text-blue-900 rounded-2xl active:scale-90 transition-all border border-slate-100"
+          >
+            <ChevronLeft size={24} strokeWidth={4} />
+          </button>
           
-          <div className="flex flex-col items-center gap-1 flex-1 px-2">
-            <div className="text-2xl font-black text-slate-900 tracking-tighter">
+          {/* 中央エリア：日付 ＋ 状態ラベル/ボタン */}
+          <div className="flex items-center gap-3">
+            <h2 className="text-xl md:text-3xl font-[900] text-slate-900 tracking-tighter whitespace-nowrap">
               {view === 'day' ? safeFormat(baseDate, 'M/d (eee)') : 
-               view === 'week' ? `${safeFormat(startOfWeek(baseDate), 'M/d')} - ${safeFormat(endOfWeek(baseDate), 'M/d')}` :
-               safeFormat(baseDate, 'yyyy年 M月')}
-            </div>
-            <div className="h-8">
-              {!isTodayInRange && (
-                <button onClick={resetToday} className="bg-[#003366] text-white px-4 py-1 rounded-full text-[12px] font-black shadow-md flex items-center gap-1.5 active:scale-95 transition-all">
-                  <RefreshCw size={14} strokeWidth={3} /> 今日へ戻る
-                </button>
-              )}
-            </div>
+              view === 'week' ? `${safeFormat(startOfWeek(baseDate), 'M/d')} - ${safeFormat(endOfWeek(baseDate), 'M/d')}` :
+              safeFormat(baseDate, 'yyyy年 M月')}
+            </h2>
+
+            {/* 🚀 修正ポイント：日付のすぐ横に「今日」ラベル、または「今日へ戻る」ボタンを配置 */}
+            {isTodayInRange ? (
+              /* 今日を表示中の場合：ラベル */
+              <div className="flex items-center gap-1.5 bg-blue-50 text-blue-600 px-3 py-1.5 rounded-full border border-blue-100 animate-in fade-in zoom-in duration-300">
+                <div className="w-2 h-2 bg-blue-600 rounded-full animate-pulse" />
+                <span className="text-[11px] font-[900] tracking-wider">今日</span>
+              </div>
+            ) : (
+              /* 今日以外を表示中の場合：戻るボタン */
+              <button 
+                onClick={resetToday} 
+                className="flex items-center gap-1.5 bg-[#003366] text-white px-3 py-1.5 rounded-full shadow-md active:scale-95 transition-all border-b-2 border-blue-950 animate-in fade-in zoom-in duration-300"
+              >
+                <RefreshCw size={14} strokeWidth={3} />
+                <span className="text-[11px] font-[900] tracking-wider">今日へ</span>
+              </button>
+            )}
           </div>
-          <button onClick={() => setBaseDate(view === 'day' ? addDays(baseDate, 1) : view === 'week' ? addWeeks(baseDate, 1) : addMonths(baseDate, 1))} className="p-2 text-blue-900 active:scale-90"><ChevronRight size={32} strokeWidth={4} /></button>
+
+          {/* 右移動ボタン */}
+          <button 
+            onClick={() => setBaseDate(view === 'day' ? addDays(baseDate, 1) : view === 'week' ? addWeeks(baseDate, 1) : addMonths(baseDate, 1))} 
+            className="p-3 bg-slate-50 text-blue-900 rounded-2xl active:scale-90 transition-all border border-slate-100"
+          >
+            <ChevronRight size={24} strokeWidth={4} />
+          </button>
         </div>
+      </div>
 
         {view === 'month' && (
           <div className="mb-6">
@@ -171,6 +198,20 @@ export default function DashboardContent({ allEvents, userId, allNotices = [], t
             const attendanceCount = event.attendance?.filter((a: any) => a.status === 'attendance').length || 0;
             const absenceCount = event.attendance?.filter((a: any) => a.status === 'absence').length || 0;
 
+            // 🚀 追加：本人の回答状況をチェック
+            const myAttendance = event.attendance?.find((a: any) => 
+              String(a.user_id) === String(userId)
+            );
+
+            // status が 'attendance' または 'absence' 以外なら「未回答（アラート対象）」とする
+            const isUnanswered = !myAttendance || 
+                                (myAttendance.status !== 'attendance' && myAttendance.status !== 'absence');
+
+            // 🚀 デバッグ用（不要なら削除してください）
+            if (isActivity) {
+              console.log(`イベント: ${cleanTitle}, 現在のステータス: ${myAttendance?.status}, アラート表示: ${isUnanswered}`);
+            }
+
             return (
               <div key={event.id} className={`rounded-[35px] p-6 shadow-lg border-t-8 transition-all active:scale-[0.98] ${isActivity ? 'bg-blue-50/60 border-[#003366]' : isEvent ? 'bg-emerald-50/70 border-emerald-500' : 'bg-white border-slate-300'}`}>
                 <div className="flex items-center justify-between mb-4">
@@ -184,7 +225,7 @@ export default function DashboardContent({ allEvents, userId, allNotices = [], t
 
                 <h3 className="text-2xl font-black text-slate-900 mb-5 leading-tight">{cleanTitle}</h3>
                 
-                {/* 🛠️ 資料表示：ネイビーのボタンに統一 */}
+                {/* 資料表示 */}
                 {event.attachment_urls && event.attachment_urls.length > 0 && (
                   <div className="space-y-3 mb-5">
                     {event.attachment_urls.map((url: string, index: number) => (
@@ -207,8 +248,25 @@ export default function DashboardContent({ allEvents, userId, allNotices = [], t
                     <MapPin size={18} className="text-red-500" strokeWidth={3} /> <span className="underline underline-offset-4 decoration-2">{event.location}</span>
                   </a>
                 )}
+
+                {/* 🚀 追加：【活動】かつ未回答の場合にアラートを表示 */}
+                {isActivity && isUnanswered && (
+                  <div className="mb-4 p-4 bg-red-50 border-2 border-red-200 rounded-[20px] flex items-center gap-3 animate-pulse">
+                    <div className="bg-red-600 text-white p-2 rounded-full shadow-sm">
+                      <Bell size={18} strokeWidth={3} />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-red-700 font-[900] text-sm leading-tight">
+                        この【活動】は出欠回答がまだ済んでいません！
+                      </p>
+                      <p className="text-red-600/70 font-bold text-[10px] mt-1">
+                        事務局が確認しています。お早めにご回答ください。
+                      </p>
+                    </div>
+                  </div>
+                )}
                 
-                <AttendanceSection eventId={event.id} userId={userId} initialStatus={event.attendance?.find((a: any) => a.user_id === userId)?.status} attendanceCount={attendanceCount} absenceCount={absenceCount} onStatusChange={() => router.refresh()} />
+                <AttendanceSection eventId={event.id} userId={userId} initialStatus={myAttendance?.status} attendanceCount={attendanceCount} absenceCount={absenceCount} onStatusChange={() => router.refresh()} />
               </div>
             );
           }) : (

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import PasswordSettingsModal from '@/components/PasswordSettingsModal';
-import { ShieldCheck, LayoutDashboard, ArrowLeft, LucideIcon, Lock, User } from 'lucide-react';
+import { ShieldCheck, LayoutDashboard, ArrowLeft, LucideIcon, Lock, User, Sun } from 'lucide-react';
 
 interface HeaderProps {
   topLabel?: string;
@@ -17,7 +17,6 @@ interface HeaderProps {
 }
 
 export default function Header({ 
-  topLabel = "LIONS HUB", 
   club = "330-A地区(1R - 3Z) 東京六本木ライオンズクラブ",
   title, 
   subtitle, 
@@ -33,100 +32,106 @@ export default function Header({
   const headerBg = isDark ? 'bg-slate-900' : 'bg-[#003366]'; 
   const borderCol = isDark ? 'border-yellow-600 shadow-yellow-900/20' : 'border-blue-950 shadow-black/20';
 
+  // 🚀 ボタンの共通スタイル定義
+  const commonBtnClass = "w-full md:min-w-[190px] flex items-center justify-center gap-3 px-6 py-4 rounded-[25px] font-[900] shadow-xl active:scale-95 transition-all border-b-4";
+
   return (
     <header className={`${headerBg} text-white p-6 md:p-8 rounded-b-[40px] md:rounded-b-[50px] mb-8 shadow-2xl border-b-8 ${borderCol} transition-colors duration-500`}>
       <div className="max-w-4xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6 md:gap-4">
         
         {/* 左側：タイトルエリア */}
-        <div className="flex-1 w-full">
-          <div className="flex items-center gap-3 mb-2">
-            <h1 className={`text-lg md:text-xl font-bold tracking-tighter uppercase ${isDark ? 'text-yellow-500' : 'text-yellow-400'}`}>
-              {topLabel}
-            </h1>
+        <div className="flex-1 w-full text-center md:text-left">
+          <div className="flex items-center justify-center md:justify-start gap-3 mb-4">
+            <div className="flex flex-col leading-none">
+              <h1 className="text-2xl md:text-3xl font-[900] tracking-tighter uppercase flex items-baseline">
+                <span className={isDark ? 'text-yellow-500' : 'text-white'}>LIONS</span>
+                <span className="text-yellow-400 ml-1">HUB</span>
+              </h1>
+              <div className="h-[3px] w-full bg-yellow-400 mt-0.5 rounded-full" />
+            </div>
+
             {isAdminBadge && (
-              <span className="bg-yellow-500 text-slate-900 px-3 py-0.5 rounded-full text-[10px] font-black shadow-md shrink-0">
-                事務局（管理者）
+              <span className="bg-yellow-500 text-slate-900 px-3 py-1 rounded-full text-[10px] font-[900] shadow-md shrink-0 uppercase tracking-wider">
+                管理者
               </span>
             )}
           </div>
 
-          <p className={`text-[14px] font-bold mb-4 tracking-wider opacity-80 ${isDark ? 'text-slate-400' : 'text-blue-200'}`}>
+          <p className={`text-[12px] md:text-[14px] font-bold mb-5 tracking-widest opacity-70 border-l-2 pl-3 ${isDark ? 'text-slate-400 border-yellow-600' : 'text-blue-200 border-blue-400'}`}>
             {club}
           </p>
 
-          <div className="flex items-center gap-4 mb-2">
-            {Icon && <Icon className="text-yellow-500 shrink-0 w-10 h-10 md:w-11 md:h-11" strokeWidth={3} />}
-            <p className="text-3xl font-black leading-tight tracking-tight">
+          <div className="flex items-center justify-center md:justify-start gap-4 mb-2">
+            {Icon && <Icon className="text-yellow-400 shrink-0 w-10 h-10 md:w-12 md:h-12 drop-shadow-lg" strokeWidth={3} />}
+            <p className="text-3xl md:text-4xl font-[900] leading-tight tracking-tighter">
               {title}
             </p>
           </div>
           
           <div className="mt-1">
-            <p className={`text-base md:text-lg font-bold ${isDark ? 'text-slate-400' : 'text-blue-100 opacity-80'}`}>
+            <p className={`text-base md:text-xl font-bold ${isDark ? 'text-slate-400' : 'text-blue-100 opacity-80'}`}>
               {subtitle}
             </p>
           </div>
         </div>
 
-        {/* --- 🛠️ 右側：アクションボタンエリア（縦並び） --- */}
+        {/* --- 右側：アクションボタンエリア --- */}
         <div className="w-full md:w-auto shrink-0 flex flex-col gap-3">
-          {/* 🚀 1. 会員情報・通知設定ボタン（新規追加） */}
+          {/* 1. 通知設定ボタン */}
           {variant === 'user' && (
             <Link 
               href="/profile"
-              className="w-full md:min-w-[180px] flex items-center justify-center gap-3 px-6 py-4 bg-white text-[#003366] rounded-[25px] font-black shadow-lg hover:bg-blue-50 active:scale-95 transition-all border-b-4 border-slate-300"
+              className={`${commonBtnClass} bg-white text-[#003366] border-slate-300 hover:bg-blue-50`}
             >
-              <User size={20} strokeWidth={3} />
-              <span className="text-sm">名前・通知設定</span>
+              <User size={22} strokeWidth={3} />
+              <span className="text-sm">通知設定</span>
             </Link>
           )}
 
-          {/* 2. パスワード設定ボタン（少しスリムにして併記） */}
+          {/* 2. パスワード設定ボタン */}
           {variant === 'user' && (
             <button 
               onClick={() => setIsModalOpen(true)}
-              className="w-full md:min-w-[180px] flex items-center justify-center gap-2 px-6 py-3 bg-yellow-500 text-slate-900 rounded-[20px] font-black shadow-md hover:bg-yellow-400 active:scale-95 transition-all border-b-4 border-yellow-700"
+              className={`${commonBtnClass} bg-yellow-500 text-slate-900 border-yellow-700 hover:bg-yellow-400`}
             >
               <Lock size={18} strokeWidth={3} />
-              <span className="text-xs">パスワード変更</span>
+              <span className="text-sm">パスワード設定</span>
             </button>
           )}
 
-          {/* 2. 管理画面ボタン（シンプルに横並び・ADMIN表記なし） */}
+          {/* 3. 管理画面/会員画面切り替えボタン */}
           {rightButtonType === 'admin' && isAdminBadge && (
             <Link 
               href="/admin" 
-              className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-white/10 border border-white/20 text-white rounded-[20px] font-bold text-sm hover:bg-white/20 transition-all active:scale-95"
+              className={`${commonBtnClass} bg-slate-800/50 text-white border-slate-900 hover:bg-slate-700 backdrop-blur-sm`}
             >
-              <ShieldCheck size={18} className="text-yellow-500" />
-              <span>管理画面を開く</span>
+              <ShieldCheck size={20} className="text-yellow-500" />
+              <span className="text-sm tracking-widest">管理画面</span>
             </Link>
           )}
 
-          {/* その他の戻るボタン等 */}
           {rightButtonType === 'member' && (
             <Link 
               href="/dashboard" 
-              className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-white/10 border border-white/20 text-white rounded-[20px] font-bold text-sm hover:bg-white/20 transition-all active:scale-95"
+              className={`${commonBtnClass} bg-slate-800/50 text-white border-slate-900 hover:bg-slate-700 backdrop-blur-sm`}
             >
-              <LayoutDashboard size={18} className="text-yellow-500" />
-              <span>会員画面へ戻る</span>
+              <LayoutDashboard size={20} className="text-yellow-500" />
+              <span className="text-sm tracking-widest">会員画面</span>
             </Link>
           )}
 
           {rightButtonType === 'adminTop' && (
             <Link 
               href="/admin" 
-              className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-white/10 border border-white/20 text-white rounded-[20px] font-bold text-sm hover:bg-white/20 transition-all active:scale-95"
+              className={`${commonBtnClass} bg-slate-800/50 text-white border-slate-900 hover:bg-slate-700 backdrop-blur-sm`}
             >
-              <ArrowLeft size={18} className="text-yellow-500" />
-              <span>管理トップへ戻る</span>
+              <ArrowLeft size={20} className="text-yellow-500" />
+              <span className="text-sm tracking-widest">管理トップ</span>
             </Link>
           )}
         </div>
       </div>
 
-      {/* モーダル表示 */}
       {isModalOpen && (
         <PasswordSettingsModal onClose={() => setIsModalOpen(false)} />
       )}

@@ -14,7 +14,10 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "LIONS HUB",
-  description: "ライオンズクラブ専用 出欠・議事録管理アプリ",
+  icons: {
+    icon: '/favicon.png',
+  },
+  description: "ライオンズクラブ専用 管理アプリ",
   manifest: "/manifest.json", // これが大事！
   themeColor: "#003366",
   appleWebApp: {

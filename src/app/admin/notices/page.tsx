@@ -180,9 +180,24 @@ export default function AdminNoticesPage() {
                     </div>
                     <p className="text-[18px] font-black text-slate-900 truncate leading-tight">{notice.title}</p>
                   </div>
-                  <div className="flex gap-2 shrink-0">
-                    <button onClick={() => openModal(notice)} className="p-4 bg-slate-50 text-slate-600 rounded-2xl hover:bg-blue-50 active:scale-90 transition-all shadow-sm"><Edit3 size={22} /></button>
-                    <button onClick={() => deleteNotice(notice.id)} className="p-4 bg-slate-50 text-slate-400 rounded-2xl hover:bg-red-50 active:scale-90 transition-all shadow-sm"><Trash2 size={22} /></button>
+                  <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+                    {/* 編集ボタン */}
+                    <button 
+                      onClick={() => openModal(notice)} 
+                      className="w-24 py-3 bg-slate-900 text-white rounded-xl shadow-md hover:bg-blue-900 active:scale-95 transition-all border-b-4 border-slate-700 flex items-center justify-center gap-1"
+                    >
+                      <Edit3 size={14} strokeWidth={3} />
+                      <span className="font-[900] text-s">編集</span>
+                    </button>
+
+                    {/* 削除ボタン */}
+                    <button 
+                      onClick={() => deleteNotice(notice.id)} 
+                      className="w-24 py-3 bg-red-50 text-red-600 rounded-xl hover:bg-red-600 hover:text-white active:scale-95 transition-all border-b-4 border-red-200 flex items-center justify-center gap-1"
+                    >
+                      <Trash2 size={14} strokeWidth={3} />
+                      <span className="font-[900] text-s">削除</span>
+                    </button>
                   </div>
                 </div>
               );

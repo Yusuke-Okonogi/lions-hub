@@ -1,7 +1,6 @@
 importScripts('https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js');
 importScripts('https://www.gstatic.com/firebasejs/9.0.0/firebase-messaging-compat.js');
 
-// ここは直接書き換えてください（公開されても安全な情報です）
 firebase.initializeApp({
   apiKey: "AIzaSyCxvEQB6O-eJw2r6eyvZ4e8_mPW7WeE8Ts",
   projectId: "melon-lions-hub",
@@ -16,7 +15,7 @@ messaging.onBackgroundMessage((payload) => {
   const notificationTitle = payload.notification.title;
   const notificationOptions = {
     body: payload.notification.body,
-    icon: '/icon-192x192.png', // あなたのアプリのアイコンパス
+    icon: '/icon-192x192.png', 
   };
 
   self.registration.showNotification(notificationTitle, notificationOptions);

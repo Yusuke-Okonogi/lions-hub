@@ -136,13 +136,33 @@ export default function AdminPage() {
           </Link>
         </div>
 
-        {/* 同期バー */}
+        {/* --- 同期バー --- */}
         <div className="bg-slate-900 p-4 rounded-[30px] shadow-lg flex items-center justify-between gap-4 border-b-4 border-slate-700">
-          <div className="flex items-center gap-3 ml-2 text-white font-black"><Calendar className="text-yellow-500" size={24} />Google同期</div>
-          <button onClick={handleSync} disabled={isSyncing} className="px-6 py-3 rounded-2xl font-black bg-yellow-500 text-slate-900 active:scale-95 shadow-md">
-            <RefreshCw className={isSyncing ? 'animate-spin' : ''} size={18} /> 同期
+          <div className="flex items-center gap-3 ml-2 text-white font-black">
+            <Calendar className="text-yellow-500" size={24} />
+            Google同期
+          </div>
+          <button 
+            onClick={handleSync} 
+            disabled={isSyncing} 
+            className="px-6 py-3 rounded-2xl font-black bg-yellow-500 text-slate-900 active:scale-95 shadow-md disabled:opacity-50"
+          >
+            <div className="flex items-center gap-2">
+              <RefreshCw className={isSyncing ? 'animate-spin' : ''} size={18} />
+              <span>{isSyncing ? '同期中...' : '同期'}</span>
+            </div>
           </button>
         </div>
+
+        {/* 🚀 追加：同期ステータス・取得件数の表示エリア */}
+        {syncStatus && (
+          <div className={`mt-2 p-4 rounded-2xl font-[900] text-center shadow-lg animate-in fade-in slide-in-from-top-2 duration-300 ${
+            syncStatus.type === 'success' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
+          }`}>
+            {syncStatus.type === 'success' && <CheckCircle className="inline-block mr-2" size={18} />}
+            {syncStatus.message}
+          </div>
+        )}
 
         {/* 出欠代理入力ヘッダー */}
         <div className="flex justify-between items-center px-2 pt-4">
