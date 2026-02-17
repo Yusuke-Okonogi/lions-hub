@@ -33,7 +33,7 @@ export default function Header({
   const borderCol = isDark ? 'border-yellow-600 shadow-yellow-900/20' : 'border-blue-950 shadow-black/20';
 
   // 🚀 ボタンの共通スタイル定義
-  const commonBtnClass = "w-full md:min-w-[190px] flex items-center justify-center gap-3 px-6 py-4 rounded-[25px] font-[900] shadow-xl active:scale-95 transition-all border-b-4";
+  const commonBtnClass = "w-full md:min-w-[170px] flex items-center justify-center gap-2 px-4 py-4 rounded-[25px] font-[900] shadow-xl active:scale-95 transition-all border-b-4";
 
   return (
     <header className={`${headerBg} text-white p-6 md:p-8 rounded-b-[40px] md:rounded-b-[50px] mb-8 shadow-2xl border-b-8 ${borderCol} transition-colors duration-500`}>
@@ -43,7 +43,7 @@ export default function Header({
         <div className="flex-1 w-full text-center md:text-left">
           <div className="flex items-center justify-center md:justify-start gap-3 mb-4">
             <div className="flex flex-col leading-none">
-              <h1 className="text-2xl md:text-3xl font-[900] tracking-tighter uppercase flex items-baseline">
+              <h1 className="text-2xl font-[900] tracking-tighter uppercase flex items-baseline">
                 <span className={isDark ? 'text-yellow-500' : 'text-white'}>LIONS</span>
                 <span className="text-yellow-400 ml-1">HUB</span>
               </h1>
@@ -51,40 +51,40 @@ export default function Header({
             </div>
 
             {isAdminBadge && (
-              <span className="bg-yellow-500 text-slate-900 px-3 py-1 rounded-full text-[10px] font-[900] shadow-md shrink-0 uppercase tracking-wider">
+              <span className="bg-yellow-500 text-slate-900 px-3 py-1 rounded-full text-[12px] font-[900] shadow-md shrink-0 uppercase tracking-wider">
                 管理者
               </span>
             )}
           </div>
 
-          <p className={`text-[12px] md:text-[14px] font-bold mb-5 tracking-widest opacity-70 border-l-2 pl-3 ${isDark ? 'text-slate-400 border-yellow-600' : 'text-blue-200 border-blue-400'}`}>
+          <p className={`text-[14px] font-bold mb-2 tracking-widest border-l-2 pl-3 ${isDark ? 'text-slate-400 border-yellow-600' : 'text-blue-200 border-blue-400'}`}>
             {club}
           </p>
 
           <div className="flex items-center justify-center md:justify-start gap-4 mb-2">
             {Icon && <Icon className="text-yellow-400 shrink-0 w-10 h-10 md:w-12 md:h-12 drop-shadow-lg" strokeWidth={3} />}
-            <p className="text-3xl md:text-4xl font-[900] leading-tight tracking-tighter">
+            <p className="text-3xl font-[900] leading-tight tracking-tighter">
               {title}
             </p>
           </div>
           
           <div className="mt-1">
-            <p className={`text-base md:text-xl font-bold ${isDark ? 'text-slate-400' : 'text-blue-100 opacity-80'}`}>
+            <p className={`text-base text-s font-bold ${isDark ? 'text-slate-400' : 'text-blue-100 opacity-80'}`}>
               {subtitle}
             </p>
           </div>
         </div>
 
         {/* --- 右側：アクションボタンエリア --- */}
-        <div className="w-full md:w-auto shrink-0 flex flex-col gap-3">
+        <div className="w-full md:w-auto shrink-0 flex flex-col gap-2">
           {/* 1. 通知設定ボタン */}
           {variant === 'user' && (
             <Link 
               href="/profile"
               className={`${commonBtnClass} bg-white text-[#003366] border-slate-300 hover:bg-blue-50`}
             >
-              <User size={22} strokeWidth={3} />
-              <span className="text-sm">通知設定</span>
+              <User size={18} strokeWidth={3} />
+              <span className="text-xs">通知設定</span>
             </Link>
           )}
 
@@ -95,7 +95,7 @@ export default function Header({
               className={`${commonBtnClass} bg-yellow-500 text-slate-900 border-yellow-700 hover:bg-yellow-400`}
             >
               <Lock size={18} strokeWidth={3} />
-              <span className="text-sm">パスワード設定</span>
+              <span className="text-xs">パスワード設定</span>
             </button>
           )}
 
@@ -106,7 +106,7 @@ export default function Header({
               className={`${commonBtnClass} bg-slate-800/50 text-white border-slate-900 hover:bg-slate-700 backdrop-blur-sm`}
             >
               <ShieldCheck size={20} className="text-yellow-500" />
-              <span className="text-sm tracking-widest">管理画面</span>
+              <span className="text-xs tracking-widest">管理画面</span>
             </Link>
           )}
 

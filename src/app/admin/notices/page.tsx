@@ -177,6 +177,7 @@ export default function AdminNoticesPage() {
                       <span className="text-slate-400 font-bold text-[14px] ml-1">
                         {new Date(notice.created_at).toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit' })}
                       </span>
+                      
                     </div>
                     <p className="text-[18px] font-black text-slate-900 truncate leading-tight">{notice.title}</p>
                   </div>
